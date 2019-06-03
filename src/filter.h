@@ -6,6 +6,8 @@
 
 
 bool json_value_match(json_object *json_value, const char *search_value);
+bool json_object_match(json_object *object, const char *key,
+	const char *value);
 
 
 #endif

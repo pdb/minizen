@@ -34,3 +34,23 @@ bool json_value_match(json_object *json_value, const char *search_value) {
 	}
 }
 
+
+/**
+ * Tests whether a given JSON object matches the given search criteria; i.e.,
+ * whether it contains a property matching the given key name and value.
+ */
+bool json_object_match(json_object *object, const char *key,
+	const char *value) {
+
+	json_object *json_value;
+	if (json_object_object_get_ex(object, key, &json_value)) {
+		return json_value_match(json_value, value);
+#ifdef MISSING_KEY_CONSIDERED_EMPTY
+	} else if (value[0] == '\0') {
+		return true;
+#endif
+	} else {
+		return false;
+	}
+}
+

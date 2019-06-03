@@ -79,18 +79,51 @@ START_TEST(json_value_match__object) {
 END_TEST
 
 
+START_TEST(json_object_match__missing) {
+
+	json_object *object = json_object_new_object();
+
+#ifdef MISSING_KEY_CONSIDERED_EMPTY
+	ck_assert(json_object_match(object, "missing", ""));
+#else
+	ck_assert(! json_object_match(object, "missing", ""));
+#endif
+
+	json_object_put(object);
+}
+END_TEST
+
+
+START_TEST(json_object_match__present) {
+
+	json_object *object = json_object_new_object();
+	json_object_object_add(object, "foo", json_object_new_string("bar"));
+
+	ck_assert(json_object_match(object, "foo", "bar"));
+	ck_assert(! json_object_match(object, "foo", "baz"));
+
+	json_object_put(object);
+}
+END_TEST
+
+
 Suite * create_filter_suite() {
 
-	TCase *testcase = tcase_create("json_value_match");
-	tcase_add_test(testcase, json_value_match__string);
-	tcase_add_test(testcase, json_value_match__empty_string);
-	tcase_add_test(testcase, json_value_match__null);
-	tcase_add_test(testcase, json_value_match__integer);
-	tcase_add_test(testcase, json_value_match__array);
-	tcase_add_test(testcase, json_value_match__object);
+	TCase *tc1 = tcase_create("json_value_match");
+	tcase_add_test(tc1, json_value_match__string);
+	tcase_add_test(tc1, json_value_match__empty_string);
+	tcase_add_test(tc1, json_value_match__null);
+	tcase_add_test(tc1, json_value_match__integer);
+	tcase_add_test(tc1, json_value_match__array);
+	tcase_add_test(tc1, json_value_match__object);
+
+	TCase *tc2 = tcase_create("json_object_match");
+	tcase_add_test(tc2, json_object_match__missing);
+	tcase_add_test(tc2, json_object_match__present);
 
 	Suite *suite = suite_create("filter");
-	suite_add_tcase(suite, testcase);
+	suite_add_tcase(suite, tc1);
+	suite_add_tcase(suite, tc2);
 
 	return suite;
 }
