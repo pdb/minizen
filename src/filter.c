@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 
 #include "filter.h"
@@ -52,5 +53,46 @@ bool json_object_match(json_object *object, const char *key,
 	} else {
 		return false;
 	}
+}
+
+
+/**
+ * Filters a JSON array of objects, returning a new array with only those
+ * objects that match the given key and value. The caller is responsible for
+ * free'ing the returned array. NULL is returned on error.
+ *
+ * This method tolerates unexpected JSON values: i.e., a root value that isn't
+ * an array, and array elements that are not objects. Strict data integrity
+ * checks should be performed elsewhere, if required.
+ */
+json_object * json_filter(json_object *root, const char *key,
+	const char *value) {
+
+	json_object *results = json_object_new_array();
+	if (! results) {
+		fprintf(stderr, "json_filter: json_object_new_array failed\n");
+		return NULL;
+	}
+
+	if (! json_object_is_type(root, json_type_array)) {
+		return results;
+	}
+
+	int len = json_object_array_length(root);
+	for (int i = 0; i < len; i++) {
+		json_object *element = json_object_array_get_idx(root, i);
+		if (json_object_is_type(element, json_type_object) &&
+			json_object_match(element, key, value)) {
+			if (json_object_array_add(results,
+				json_object_get(element)) != 0) {
+				fprintf(stderr, "json_filter: "
+					"json_object_array_add failed\n");
+				json_object_put(results);
+				return NULL;
+			}
+		}
+	}
+
+	return results;
 }
 

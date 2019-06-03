@@ -107,6 +107,44 @@ START_TEST(json_object_match__present) {
 END_TEST
 
 
+START_TEST(json_filter__non_array_root) {
+
+	json_object *result;
+
+	result = json_filter(NULL, "foo", "bar");
+	ck_assert(json_object_is_type(result, json_type_array) &&
+		json_object_array_length(result) == 0);
+	json_object_put(result);
+}
+END_TEST
+
+
+START_TEST(json_filter__basic_searches) {
+
+	json_object *object = json_object_new_object();
+	json_object_object_add(object, "foo", json_object_new_string("bar"));
+	json_object_object_add(object, "bar", json_object_new_string("foo"));
+
+	json_object *array = json_object_new_array();
+	json_object_array_add(array, object);
+
+	json_object *result;
+
+	result = json_filter(array, "foo", "bar");
+	ck_assert(json_object_is_type(result, json_type_array) &&
+		json_object_array_length(result) == 1);
+	json_object_put(result);
+
+	result = json_filter(array, "foo", "baz");
+	ck_assert(json_object_is_type(result, json_type_array) &&
+		json_object_array_length(result) == 0);
+	json_object_put(result);
+
+	json_object_put(array);
+}
+END_TEST
+
+
 Suite * create_filter_suite() {
 
 	TCase *tc1 = tcase_create("json_value_match");
@@ -121,9 +159,14 @@ Suite * create_filter_suite() {
 	tcase_add_test(tc2, json_object_match__missing);
 	tcase_add_test(tc2, json_object_match__present);
 
+	TCase *tc3 = tcase_create("json_filter");
+	tcase_add_test(tc3, json_filter__non_array_root);
+	tcase_add_test(tc3, json_filter__basic_searches);
+
 	Suite *suite = suite_create("filter");
 	suite_add_tcase(suite, tc1);
 	suite_add_tcase(suite, tc2);
+	suite_add_tcase(suite, tc3);
 
 	return suite;
 }
