@@ -11,10 +11,12 @@ following GNU tools:
 * [Autoconf](https://www.gnu.org/software/autoconf/)
 * [Automake](https://www.gnu.org/software/automake/)
 * [GCC](https://www.gnu.org/software/gcc/)
+* [GNU Libtool](https://www.gnu.org/software/libtool/)
 * [GNU Make](https://www.gnu.org/software/make/)
 
 This project also uses the following third party libraries and tools:
 * [Check](https://libcheck.github.io/check/)
+* [JSON-C](https://github.com/json-c/json-c)
 * [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
 
 In addition, [Git](https://git-scm.com/) is needed if cloning this repository.
@@ -22,12 +24,12 @@ In addition, [Git](https://git-scm.com/) is needed if cloning this repository.
 The following table shows the command required to install these dependencies on
 some common Linux distributions:
 
-| Distribution | Command                                                                        |
-| ------------ | ------------------------------------------------------------------------------ |
-| Alpine       | ```# apk add autoconf automake build-base check-dev git```                     |
-| Arch Linux   | ```# pacman -S base-devel check git```                                         |
-| CentOS       | ```# yum install autoconf automake check-devel gcc git make```                 |
-| Ubuntu       | ```# apt-get install autoconf automake build-essential check git pkg-config``` |
+| Distribution | Command                                                                                              |
+| ------------ | ---------------------------------------------------------------------------------------------------- |
+| Alpine       | ```# apk add autoconf automake build-base check-dev git json-c-dev libtool```                        |
+| Arch Linux   | ```# pacman -S base-devel check git json-c```                                                        |
+| CentOS       | ```# yum install autoconf automake check-devel gcc git json-c-devel libtool make```                  |
+| Ubuntu       | ```# apt-get install autoconf automake build-essential check git libtool libjson-c-dev pkg-config``` |
 
 ## Building and Installing
 
