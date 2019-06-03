@@ -10,3 +10,4 @@ depcomp
 install-sh
 minizen-*.tar.gz
 missing
+test-driver
