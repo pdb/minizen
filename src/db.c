@@ -106,7 +106,18 @@ static json_object * minizen_db_load_table(struct minizen_db *db,
 	free(path);
 
 	if (! root) {
-		fprintf(stderr, "%s", json_util_get_last_err());
+		/*
+		 * Note that json_util_get_last_err() unexpectedly returns NULL
+		 * if json_object_from_file() fails because the JSON is
+		 * unpareseable. This bug/inconsistency in json-c was exposed
+		 * by one of the unit tests in this project.
+		 */
+		const char *msg = json_util_get_last_err();
+		if (msg) {
+			fprintf(stderr, "%s", msg);
+		} else {
+			fprintf(stderr, "%s: invalid JSON file\n", table);
+		}
 		return NULL;
 	}
 
