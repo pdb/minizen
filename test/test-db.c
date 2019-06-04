@@ -94,7 +94,7 @@ Suite * create_db_suite() {
 	tcase_add_test(tc1, minizen_db_open__no_dir);
 
 	TCase *tc2 = tcase_create("minizen_db_close");
-	tcase_add_test(tc1, minizen_db_close__no_db);
+	tcase_add_test(tc2, minizen_db_close__no_db);
 
 	/*
 	 * This is more an integration test than a unit test; but we include it
