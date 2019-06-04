@@ -4,12 +4,40 @@ This is **minizen**, a very simple ticket searching system.
 
 # Usage
 
+Once built and installed (see
+[Building and Installing](#building-and-installing)) a search can be performed
+by calling minizen with three arguments:
+
+<pre><code>$ minizen <i>TABLE KEY VALUE</i>
+</code></pre>
+
+where:
+* <code><i>TABLE</i></code> is one of `organizations`, `tickets` or `users`;
+* <code><i>KEY</i></code> and <code><i>VALUE</i></code> describe the search
+  criteria.
+
+For example:
+
+```
+$ minizen organizations _id 1
+$ minizen tickets priority high
+$ minizen users active true
+```
+
+Note that shell quoting or escaping may be necessary if any of the arguments
+contain whitespace or any other special characters:
+
+```
+$ minizen tickets subject \$100
+$ minizen users name "Bob Smith"
+$ minizen users email ""
+```
+
 The minizen tool will look for JSON files in the current working directory
 unless a different directory is specified using the `--data-dir` option; e.g.:
 
-```
-$ minizen --data-dir=/tmp/minizen
-```
+<pre><code>$ minizen <b>--data-dir=<i>DIR</i></b> <i>TABLE KEY VALUE</i>
+</code></pre>
 
 # Installation
 
