@@ -67,6 +67,58 @@ static char * minizen_db_get_path(struct minizen_db *db,
 }
 
 
+/**
+ * Tests whether a given table name is legal (and indirectly whether it can
+ * be used in a path component).
+ */
+static bool minizen_db_valid_table(const char *table) {
+
+	if (! table) {
+		return false;
+	}
+
+	return (strcmp(table, "users") == 0 ||
+		strcmp(table, "organizations") == 0 ||
+		strcmp(table, "tickets") == 0);
+}
+
+
+/**
+ * Loads the JSON data file that corresponds to the given table name and
+ * performs basic sanity checks on its content. Returns NULL on error.
+ */
+static json_object * minizen_db_load_table(struct minizen_db *db,
+	const char *table) {
+
+	if (! minizen_db_valid_table(table)) {
+		fprintf(stderr, "invalid table: %s\n", table);
+		return NULL;
+	}
+
+	char *path = minizen_db_get_path(db, "%s.json", table);
+	if (! path) {
+		fprintf(stderr, "minizen_db_get_path failed\n");
+		return NULL;
+	}
+
+	json_object *root = json_object_from_file(path);
+	free(path);
+
+	if (! root) {
+		fprintf(stderr, "%s", json_util_get_last_err());
+		return NULL;
+	}
+
+	if (! json_object_is_type(root, json_type_array)) {
+		fprintf(stderr, "%s: root object is not an array\n", table);
+		json_object_put(root);
+		return NULL;
+	}
+
+	return root;
+}
+
+
 void minizen_db_close(struct minizen_db *db) {
 
 	if (! db) {
