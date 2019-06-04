@@ -1,6 +1,8 @@
 #ifndef MINIZEN_DB_H_
 #define MINIZEN_DB_H_
 
+#include <json-c/json.h>
+
 struct minizen_db;
 
 
@@ -17,6 +19,15 @@ struct minizen_db;
  *	mysql://localhost:3306/minizen
  */
 struct minizen_db * minizen_db_open(const char *dir);
+
+
+/**
+ * Queries a given table for all objects that have a key/value pair matching
+ * the given criteria. Returns an array containing the matched objects on
+ * success, or NULL on error.
+ */
+json_object * minizen_db_search(struct minizen_db *db, const char *table,
+	const char *key, const char *value);
 
 
 /**

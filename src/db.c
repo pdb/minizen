@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "db.h"
+#include "filter.h"
 
 
 struct minizen_db {
@@ -116,6 +117,22 @@ static json_object * minizen_db_load_table(struct minizen_db *db,
 	}
 
 	return root;
+}
+
+
+json_object * minizen_db_search(struct minizen_db *db, const char *table,
+	const char *key, const char *value) {
+
+	json_object *root = minizen_db_load_table(db, table);
+	if (! root) {
+		return NULL;
+	}
+
+	json_object *results = json_filter(root, key, value);
+
+	json_object_put(root);
+
+	return results;
 }
 
 
