@@ -7,8 +7,31 @@
 #include "filter.h"
 
 
+typedef enum minizen_table {
+	MINIZEN_TABLE_ORGANIZATIONS,
+	MINIZEN_TABLE_TICKETS,
+	MINIZEN_TABLE_USERS,
+	MAX_MINIZEN_TABLE
+} minizen_table_t;
+
+
+static minizen_table_t table_name_to_slot(const char *table) {
+
+	if (strcmp(table, "organizations") == 0) {
+		return MINIZEN_TABLE_ORGANIZATIONS;
+	} else if (strcmp(table, "tickets") == 0) {
+		return MINIZEN_TABLE_TICKETS;
+	} else if (strcmp(table, "users") == 0) {
+		return MINIZEN_TABLE_USERS;
+	}
+
+	return -1;
+}
+
+
 struct minizen_db {
 	char *dir;
+	json_object *table_cache[MAX_MINIZEN_TABLE];
 };
 
 
@@ -24,6 +47,8 @@ struct minizen_db * minizen_db_open(const char *dir) {
 		perror("minizen_db_open: malloc");
 		return NULL;
 	}
+
+	memset(db, 0, sizeof(struct minizen_db));
 
 	db->dir = strdup(dir);
 	if (! db->dir) {
@@ -69,29 +94,13 @@ static char * minizen_db_get_path(struct minizen_db *db,
 
 
 /**
- * Tests whether a given table name is legal (and indirectly whether it can
- * be used in a path component).
- */
-static bool minizen_db_valid_table(const char *table) {
-
-	if (! table) {
-		return false;
-	}
-
-	return (strcmp(table, "users") == 0 ||
-		strcmp(table, "organizations") == 0 ||
-		strcmp(table, "tickets") == 0);
-}
-
-
-/**
  * Loads the JSON data file that corresponds to the given table name and
  * performs basic sanity checks on its content. Returns NULL on error.
  */
 static json_object * minizen_db_load_table(struct minizen_db *db,
 	const char *table) {
 
-	if (! minizen_db_valid_table(table)) {
+	if (table_name_to_slot(table) == -1) {
 		fprintf(stderr, "invalid table: %s\n", table);
 		return NULL;
 	}
@@ -131,10 +140,40 @@ static json_object * minizen_db_load_table(struct minizen_db *db,
 }
 
 
+/**
+ * Gets the JSON data that corresponds to the given table name (possibly from
+ * disk, possibly from cache). Returns NULL on error.
+ *
+ * This function increments the reference count of the returned object so that
+ * it is semantically equivalent to minizen_db_load_table; i.e., the caller is
+ * responsible for decrementing the reference count when done with the object.
+ */
+static json_object * minizen_db_get_table(struct minizen_db *db,
+	const char *table) {
+
+	minizen_table_t i = table_name_to_slot(table);
+	if (i == -1) {
+		fprintf(stderr, "unknown table: %s\n", table);
+		return NULL;
+	}
+
+	if (! db->table_cache[i]) {
+		db->table_cache[i] = minizen_db_load_table(db, table);
+	}
+
+	return json_object_get(db->table_cache[i]);
+}
+
+
 json_object * minizen_db_search(struct minizen_db *db, const char *table,
 	const char *key, const char *value) {
 
-	json_object *root = minizen_db_load_table(db, table);
+	if (! table) {
+		fprintf(stderr, "minizen_db_search: no table specified\n");
+		return NULL;
+	}
+
+	json_object *root = minizen_db_get_table(db, table);
 	if (! root) {
 		return NULL;
 	}
@@ -151,6 +190,10 @@ void minizen_db_close(struct minizen_db *db) {
 
 	if (! db) {
 		return;
+	}
+
+	for (int i = 0; i < MAX_MINIZEN_TABLE; i++) {
+		json_object_put(db->table_cache[i]);
 	}
 
 	free(db->dir);

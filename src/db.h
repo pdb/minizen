@@ -14,7 +14,7 @@ struct minizen_db;
  *
  * In the future this call could be adapted to support different database
  * backends by taking a URI and switching on scheme; e.g.:
- * 	file:///var/db/minizen
+ * 	file:///var/db/minizen?cache=false
  * 	sqlite:///var/db/minizen/db.sqlite
  *	mysql://localhost:3306/minizen
  */
