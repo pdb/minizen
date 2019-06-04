@@ -15,7 +15,7 @@ struct minizen_db {
 struct minizen_db * minizen_db_open(const char *dir) {
 
 	if (! dir) {
-		fprintf(stderr, "minizen_db_open: directory not specified");
+		fprintf(stderr, "minizen_db_open: directory not specified\n");
 		return NULL;
 	}
 
