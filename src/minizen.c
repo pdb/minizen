@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "db.h"
+#include "minizen.h"
 
 
 static struct option long_options[] = {
@@ -14,7 +15,7 @@ static struct option long_options[] = {
 
 static void usage(const char *app) {
 
-	fprintf(stderr, "usage: %s [--data-dir=DIR]\n", app);
+	fprintf(stderr, "usage: %s [--data-dir=DIR] TABLE KEY VALUE\n", app);
 }
 
 
@@ -39,7 +40,7 @@ int main(int argc, char **argv) {
 		}
 	}
 
-	if (argc != optind) {
+	if (argc != optind + 3) {
 		usage(argv[0]);
 		return EXIT_FAILURE;
 	}
@@ -49,8 +50,11 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
+	int rc = minizen_search(db, argv[optind], argv[optind + 1],
+		argv[optind + 2]);
+
 	minizen_db_close(db);
 
-	return EXIT_SUCCESS;
+	return rc;
 }
 
