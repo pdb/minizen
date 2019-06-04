@@ -2,6 +2,15 @@
 
 This is **minizen**, a very simple ticket searching system.
 
+# Usage
+
+The minizen tool will look for JSON files in the current working directory
+unless a different directory is specified using the `--data-dir` option; e.g.:
+
+```
+$ minizen --data-dir=/tmp/minizen
+```
+
 # Installation
 
 ## Dependencies

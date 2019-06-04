@@ -6,7 +6,8 @@
 
 int main() {
 
-	SRunner *runner = srunner_create(create_filter_suite());
+	SRunner *runner = srunner_create(create_db_suite());
+	srunner_add_suite(runner, create_filter_suite());
 	srunner_run_all(runner, CK_NORMAL);
 	int failures = srunner_ntests_failed(runner);
 	srunner_free(runner);

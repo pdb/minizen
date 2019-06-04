@@ -4,6 +4,7 @@
 #include <check.h>
 
 
+Suite * create_db_suite();
 Suite * create_filter_suite();
 
 
