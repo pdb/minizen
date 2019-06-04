@@ -9,6 +9,7 @@
 
 static struct option long_options[] = {
 	{ "data-dir",		required_argument,	NULL, 'd' },
+	{ "help",		no_argument,		NULL, 'h' },
 	{ NULL, 0, NULL, 0 }
 };
 
@@ -25,7 +26,7 @@ int main(int argc, char **argv) {
 
 	while (true) {
 		int option_index;
-		int c = getopt_long(argc, argv, "d:", long_options,
+		int c = getopt_long(argc, argv, "d:h", long_options,
 			&option_index);
 		if (c == -1) {
 			break;
@@ -34,6 +35,9 @@ int main(int argc, char **argv) {
 			case 'd':
 				data_dir = optarg;
 				break;
+			case 'h':
+				usage(argv[0]);
+				return EXIT_SUCCESS;
 			default:
 				usage(argv[0]);
 				return EXIT_FAILURE;
