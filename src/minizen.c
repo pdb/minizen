@@ -1,9 +1,9 @@
 #include <getopt.h>
+#include <minizen/db.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "db.h"
 #include "minizen.h"
 
 

@@ -11,6 +11,9 @@ PKG_CHECK_MODULES(JSON_C, json-c >= 0.13.0)
 
 AC_CONFIG_FILES(
 	Makefile
+	include/Makefile
+	include/minizen/Makefile
+	lib/Makefile
 	src/Makefile
 	test/Makefile
 )

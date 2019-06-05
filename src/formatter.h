@@ -1,7 +1,7 @@
 #ifndef MINIZEN_FORMATTER_H_
 #define MINIZEN_FORMATTER_H_
 
-#include "db.h"
+#include <minizen/db.h>
 
 
 typedef int (*minizen_af_cb)(struct minizen_db *db, int elements);

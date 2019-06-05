@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src test
+SUBDIRS = include lib src test
 
 dist_noinst_DATA = \
 	data/users.json \

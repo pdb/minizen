@@ -1,6 +1,6 @@
 #include "unit-tests.h"
 
-#include "db.h"
+#include <minizen/db.h>
 
 
 START_TEST(minizen_db_open__success) {
