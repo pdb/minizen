@@ -289,7 +289,7 @@ the future.
 The tool should handle and report all errors back to the user.
 
 Internally error handling is very basic (with errors generally written to
-stdout when they occur, and an error code propagated back to `main`) but with
+stderr when they occur, and an error code propagated back to `main`) but with
 the use of a shared library it would be nice to evolve this in the future.
 Alternatives could include stashing the last error in `struct minizen_db`
 (for retrieval by the caller when the API call finishes) or being able to set
