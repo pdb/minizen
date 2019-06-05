@@ -87,6 +87,34 @@ START_TEST(minizen_db_search__matching) {
 END_TEST
 
 
+/*
+ * This test is designed to check all valid paths through table_name_to_slot
+ * (which is a static method, hence the indirect call via minizen_db_search).
+ */
+START_TEST(minizen_db_search__search_all_known_tables) {
+
+	struct minizen_db *db =
+		minizen_db_open(TOP_SRCDIR "/test/data/minimal");
+
+	json_object *result;
+
+	result = minizen_db_search(db, "organizations", "ignored", "ignored");
+	ck_assert(result != NULL);
+	json_object_put(result);
+
+	result = minizen_db_search(db, "tickets", "ignored", "ignored");
+	ck_assert(result != NULL);
+	json_object_put(result);
+
+	result = minizen_db_search(db, "users", "ignored", "ignored");
+	ck_assert(result != NULL);
+	json_object_put(result);
+
+	minizen_db_close(db);
+}
+END_TEST
+
+
 Suite * create_db_suite() {
 
 	TCase *tc1 = tcase_create("minizen_db_open");
@@ -105,6 +133,7 @@ Suite * create_db_suite() {
 	tcase_add_test(tc3, minizen_db_search__invalid_table_name);
 	tcase_add_test(tc3, minizen_db_search__invalid_table_data);
 	tcase_add_test(tc3, minizen_db_search__matching);
+	tcase_add_test(tc3, minizen_db_search__search_all_known_tables);
 
 	Suite *suite = suite_create("db");
 	suite_add_tcase(suite, tc1);

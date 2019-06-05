@@ -128,7 +128,7 @@ Once the tests have completed, gcov can be run:
 <pre><code>$ cd lib
 $ gcov *.gcno
 File 'db.c'
-<b>Lines executed:86.75% of 83</b>
+<b>Lines executed:87.95% of 83</b>
 Creating 'db.c.gcov'
 
 File 'filter.c'
@@ -137,7 +137,9 @@ Creating 'filter.c.gcov'
 </code></pre>
 
 Coverage statistics are displayed when gcov runs (as shown above) and annotated
-source files are created that highlight lines not executed.
+source files are created that highlight lines not executed. In the case above
+the only lines not executed relate to malloc failures and [currently]
+unreachable code.
 
 ## Memory Leak Checks
 

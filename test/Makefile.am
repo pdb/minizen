@@ -9,6 +9,9 @@ unit_tests_LDADD = $(top_builddir)/lib/libminizen.la @CHECK_LIBS@ @JSON_C_LIBS@
 noinst_HEADERS = unit-tests.h
 
 dist_noinst_DATA = \
+	data/minimal/users.json \
+	data/minimal/organizations.json \
+	data/minimal/tickets.json \
 	data/partial/users.json \
 	data/invalid/users.json \
 	data/invalid/tickets.json
