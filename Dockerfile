@@ -23,4 +23,9 @@ RUN apk add --no-cache json-c
 
 COPY --from=build /usr/local /usr/local/
 
+# Make the reference data available in the image.
+
+COPY data /var/db/minizen
+WORKDIR /var/db/minizen
+
 ENTRYPOINT ["minizen"]

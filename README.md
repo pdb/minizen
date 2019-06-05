@@ -52,7 +52,18 @@ $ docker run minizen
 ```
 
 Any additional arguments passed to `docker run minizen` will be passed through
-to the minizen tool (see [Usage](#usage) for more information).
+to the minizen tool (see [Usage](#usage) for more information) making the
+typical invocation:
+
+<pre><code>$ docker run minizen <i>TABLE KEY VALUE</i>
+</code></pre>
+
+Reference JSON files are preinstalled to `/var/db/minizen`, the container's
+working directory, and so are queried by default. Alternate sets of JSON files
+may be queried by mounting a local directory on `/var/db/minizen`; i.e.,
+
+<pre><code>$ docker run <b>-v <i>DIR</i>:/var/db/minizen</b> minizen <i>TABLE KEY VALUE</i>
+</code></pre>
 
 # Manual Installation
 
