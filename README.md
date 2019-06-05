@@ -139,4 +139,23 @@ Creating 'filter.c.gcov'
 Coverage statistics are displayed when gcov runs (as shown above) and annotated
 source files are created that highlight lines not executed.
 
+## Memory Leak Checks
+
+Memory leaks can be checked using [Valgrind](http://www.valgrind.org/).
+
+This works well for the minizen tool itself:
+
+```
+$ valgrind --leak-check=full minizen
+```
+
+but to check memory leaks in the _tests_ we need to run the tests from within
+the `test` subdirectory (so tests can find their data files) and ideally in a
+non-forking mode:
+
+<pre><code>$ cd test
+$ make check
+$ <b>CK_FORK=no</b> valgrind --leak-check=full <b>./unit-tests</b>
+</code></pre>
+
 [gnu-build-system]: https://en.wikipedia.org/wiki/GNU_Build_System
