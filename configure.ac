@@ -1,4 +1,4 @@
-AC_INIT(minizen, 0.0.0)
+AC_INIT(minizen, 1.0.0)
 AM_INIT_AUTOMAKE(foreign)
 
 AC_CONFIG_MACRO_DIR([m4])
