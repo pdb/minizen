@@ -161,3 +161,35 @@ $ <b>CK_FORK=no</b> valgrind --leak-check=full <b>./unit-tests</b>
 </code></pre>
 
 [gnu-build-system]: https://en.wikipedia.org/wiki/GNU_Build_System
+
+# Performance
+
+As this basic implementation simply iterates over all objects in the table it
+has O(_n_) performance for both:
+* the first lookup in a table (which requires parsing the underlying JSON
+  file); and
+* subsequent cached lookups.
+
+This can be measured empirically:
+
+| Table Size (objects)             | 1,000 | 10,000 | 100,000 | 1,000,000 |
+| :------------------------------- | ----: | -----: | ------: | --------: |
+| Average _First_ Lookup (ms)      |  10.7 |   97.6 |   774.2 |   7,902.3 |
+| Average _Subsequent_ Lookup (ms) |   0.1 |    3.1 |    45.7 |     452.0 |
+
+These numbers come from running a performance tool (in the "performance" branch
+of the repository) on my laptop three times for each table size and averaging
+the results; e.g.:
+
+```
+$ for I in {1..3}; do
+> ./src/performance --data-dir=10000-users --lookups 10000 users _id 0
+> done
+10000 lookups in 32704.016 ms (average = 3.270 ms); first query = 100.256 ms
+10000 lookups in 30680.144 ms (average = 3.068 ms); first query = 98.042 ms
+10000 lookups in 30803.999 ms (average = 3.080 ms); first query = 94.604 ms
+```
+
+The input files for these tests were manually created by repeatedly cycling the
+content of the reference `users.json` file (while ensuring the resulting file
+was valid JSON).
