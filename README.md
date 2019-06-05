@@ -162,7 +162,94 @@ $ <b>CK_FORK=no</b> valgrind --leak-check=full <b>./unit-tests</b>
 
 [gnu-build-system]: https://en.wikipedia.org/wiki/GNU_Build_System
 
-# Performance
+# Code Challenge Points
+
+## Specifications
+
+### Language
+
+The specification states:
+
+> Use the language in which you are strongest.
+
+and so this is in C (which is what most of my recent development has been in,
+as I've talked about in my interviews and mentioned in my CV) though a
+higher-level language may seem like a more natural choice for this project if
+it was to be an ongoing concern and supported by others.
+
+### README
+
+I hope you're enjoying reading this as much as I've enjoyed writing it! :)
+
+## Evaluation Criteria
+
+### Extensibility
+
+The decision to separate the data access functions into their own reusable
+library, separate from the command line tool, is one way of showing a
+separation of concerns and extensibility. As noted in `<minizen/db.h>` it would
+be easy to add support in the library for any number of other backend databases
+(whether traditional SQL databases or generic key-value stores) with this being
+transparent to the command line tool.
+
+Having a separate library also lets us easily re-use this code in other tools
+(e.g., GUI applications, web applications, etc) while supporting independent
+development of the library and those tools. The API could also be easily
+extended in the future.
+
+The minizen tool itself could also easily be extended to support a subcommand
+style invocation:
+
+<pre><code>$ minizen <b>subcommand</b> ...
+</code></pre>
+
+For example:
+
+<pre><code>$ minizen <b>search</b> <i>TABLE KEY VALUE</i>
+$ minizen <b>schema</b> <i>TABLE</i>
+</code></pre>
+
+Consideration for this kind of extensibility is the reason the search code is
+in it's own `minizen-search.c` file (though we should also implement a few
+other minor changes, such as passing `argc` and `argv` directly to the
+subcommand's implementing function).
+
+### Simplicity
+
+The _code_ tries to be relatively simple (for C, at least); and this is a
+reasonably small project: [SLOCCount](https://dwheeler.com/sloccount/) shows
+~200 lines of source code for each of the library and the command line tool
+in version 1.0.0:
+
+```
+$ sloccount lib src
+...
+SLOC	Directory	SLOC-by-Language (Sorted)
+213     src             ansic=213
+200     lib             ansic=200
+...
+```
+
+The _design_ also tries to be simple, attempting to make as few assumptions
+about the data as possible (for example, not assuming any uniqueness
+constraints) and therefore treating all objects as opaque as possible. This
+also helps keep things extensible for the future; though we could certainly
+implement a more rigid schema if needed. We also only support a simple
+key/value search at the moment, though more complex search queries could be
+supported.
+
+The _tool_ also aims to be simple for the user by taking all of its arguments
+on the command line (though it could easily fall through to an interactive mode
+in the future if no arguments were specified).
+
+### Test Coverage
+
+As shown in the [Test Coverage](#test-coverage) section, there are a number of
+tests present for the minizen _library_. Arguably testing is a little more
+complicated and intrusive in C than other languages; but it still has value
+and proved useful in this exercise, as commit 8629d4a shows.
+
+### Performance
 
 As this basic implementation simply iterates over all objects in the table it
 has O(_n_) performance for both:
@@ -193,3 +280,17 @@ $ for I in {1..3}; do
 The input files for these tests were manually created by repeatedly cycling the
 content of the reference `users.json` file (while ensuring the resulting file
 was valid JSON).
+
+We could get better performance by indexing well-known or often-queried keys in
+the future.
+
+### Robustness
+
+The tool should handle and report all errors back to the user.
+
+Internally error handling is very basic (with errors generally written to
+stdout when they occur, and an error code propagated back to `main`) but with
+the use of a shared library it would be nice to evolve this in the future.
+Alternatives could include stashing the last error in `struct minizen_db`
+(for retrieval by the caller when the API call finishes) or being able to set
+an error callback.
