@@ -13,6 +13,7 @@ AC_CONFIG_FILES(
 	Makefile
 	include/Makefile
 	include/minizen/Makefile
+	lib/Makefile
 	src/Makefile
 	test/Makefile
 )
