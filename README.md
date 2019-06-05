@@ -111,4 +111,32 @@ All standard GNU Build System options should work as expected (e.g.,
 out-of-tree builds, custom installation prefixes, creation of distribution
 tarballs, etc).
 
+## Test Coverage
+
+Test coverage can be measured using
+[gcov](https://gcc.gnu.org/onlinedocs/gcc/Gcov.html).
+
+This requires the following options to be used at compile time:
+
+<pre><code>$ ./configure <b>CFLAGS=-coverage --disable-shared</b>
+</code></pre>
+
+after which `make check` can be run as usual.
+
+Once the tests have completed, gcov can be run:
+
+<pre><code>$ cd lib
+$ gcov *.gcno
+File 'db.c'
+<b>Lines executed:86.75% of 83</b>
+Creating 'db.c.gcov'
+
+File 'filter.c'
+<b>Lines executed:85.71% of 35</b>
+Creating 'filter.c.gcov'
+</code></pre>
+
+Coverage statistics are displayed when gcov runs (as shown above) and annotated
+source files are created that highlight lines not executed.
+
 [gnu-build-system]: https://en.wikipedia.org/wiki/GNU_Build_System
