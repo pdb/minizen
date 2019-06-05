@@ -4,9 +4,9 @@ This is **minizen**, a very simple ticket searching system.
 
 # Usage
 
-Once built and installed (see
-[Building and Installing](#building-and-installing)) a search can be performed
-by calling minizen with three arguments:
+Once built and installed (see [Docker Quick Start](#docker-quick-start) or
+[Manual Installation](#manual-installation) below) a search can be performed by
+calling minizen with three arguments:
 
 <pre><code>$ minizen <i>TABLE KEY VALUE</i>
 </code></pre>
@@ -39,7 +39,22 @@ unless a different directory is specified using the `--data-dir` option; e.g.:
 <pre><code>$ minizen <b>--data-dir=<i>DIR</i></b> <i>TABLE KEY VALUE</i>
 </code></pre>
 
-# Installation
+# Docker Quick Start
+
+If you have [Docker](https://www.docker.com/) installed, the following steps
+will build and run a container that executes the minizen tool:
+
+```
+$ git clone https://github.com/pdb/minizen.git
+$ cd minizen
+$ docker build -t minizen .
+$ docker run minizen
+```
+
+Any additional arguments passed to `docker run minizen` will be passed through
+to the minizen tool (see [Usage](#usage) for more information).
+
+# Manual Installation
 
 ## Dependencies
 
