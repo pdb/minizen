@@ -8,6 +8,7 @@
 
 
 typedef enum minizen_table {
+	MINIZEN_TABLE_UNKNOWN = -1,
 	MINIZEN_TABLE_ORGANIZATIONS,
 	MINIZEN_TABLE_TICKETS,
 	MINIZEN_TABLE_USERS,
@@ -25,7 +26,7 @@ static minizen_table_t table_name_to_slot(const char *table) {
 		return MINIZEN_TABLE_USERS;
 	}
 
-	return -1;
+	return MINIZEN_TABLE_UNKNOWN;
 }
 
 
@@ -100,7 +101,7 @@ static char * minizen_db_get_path(struct minizen_db *db,
 static json_object * minizen_db_load_table(struct minizen_db *db,
 	const char *table) {
 
-	if (table_name_to_slot(table) == -1) {
+	if (table_name_to_slot(table) == MINIZEN_TABLE_UNKNOWN) {
 		fprintf(stderr, "invalid table: %s\n", table);
 		return NULL;
 	}
@@ -152,7 +153,7 @@ static json_object * minizen_db_get_table(struct minizen_db *db,
 	const char *table) {
 
 	minizen_table_t i = table_name_to_slot(table);
-	if (i == -1) {
+	if (i == MINIZEN_TABLE_UNKNOWN) {
 		fprintf(stderr, "unknown table: %s\n", table);
 		return NULL;
 	}
