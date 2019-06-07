@@ -145,19 +145,24 @@ unreachable code.
 
 Memory leaks can be checked using [Valgrind](http://www.valgrind.org/).
 
-This works well for the minizen tool itself:
+This works well for the minizen tool itself; both when installed:
 
 ```
 $ valgrind --leak-check=full minizen
 ```
 
-but to check memory leaks in the _tests_ we need to run the tests from within
-the `test` subdirectory (so tests can find their data files) and ideally in a
-non-forking mode:
+and when run from within the build tree:
+
+<pre><code>$ <b>libtool --mode=execute</b> valgrind --leak-check=full src/minizen
+</code></pre>
+
+To check memory leaks in the _tests_ we need to run the tests from within the
+`test` subdirectory of the build tree (so tests can find their data files) and
+ideally in a non-forking mode:
 
 <pre><code>$ cd test
 $ make check
-$ <b>CK_FORK=no</b> valgrind --leak-check=full <b>./unit-tests</b>
+$ <b>CK_FORK=no</b> libtool --mode=execute valgrind --leak-check=full <b>./unit-tests</b>
 </code></pre>
 
 [gnu-build-system]: https://en.wikipedia.org/wiki/GNU_Build_System
