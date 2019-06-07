@@ -8,6 +8,16 @@
 #include "minizen.h"
 
 
+static struct {
+	const char *command;
+	int (*f)(struct minizen_db *db, int argc, char **argv);
+} minizen_commands[] = {
+	{ "performance",	minizen_performance	},
+	{ "search",		minizen_search		},
+	{ NULL, NULL }
+};
+
+
 static struct option long_options[] = {
 	{ "data-dir",		required_argument,	NULL, 'd' },
 	{ "help",		no_argument,		NULL, 'h' },
@@ -65,11 +75,16 @@ int main(int argc, char **argv) {
 	argc -= optind, argv += optind;
 
 	int rc;
-	if (strcmp(command, "performance") == 0) {
-		rc = minizen_performance(db, argc, argv);
-	} else if (strcmp(command, "search") == 0) {
-		rc = minizen_search(db, argc, argv);
-	} else {
+	bool command_found = false;
+	for (int i = 0; minizen_commands[i].command; i++) {
+		if (strcmp(command, minizen_commands[i].command) == 0) {
+			command_found = true;
+			rc = minizen_commands[i].f(db, argc, argv);
+			break;
+		}
+	}
+
+	if (! command_found) {
 		fprintf(stderr, "minizen: '%s' is not a valid command\n",
 			command);
 		rc = EXIT_FAILURE;
