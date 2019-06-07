@@ -248,13 +248,12 @@ This can be measured empirically:
 | Average _First_ Lookup (ms)      |  10.7 |   97.6 |   774.2 |   7,902.3 |
 | Average _Subsequent_ Lookup (ms) |   0.1 |    3.1 |    45.7 |     452.0 |
 
-These numbers come from running a performance tool (in the "performance" branch
-of the repository) on my laptop three times for each table size and averaging
-the results; e.g.:
+These numbers come from running the special `minizen performance` command on
+my laptop three times for each table size and averaging the results; e.g.:
 
 ```
 $ for I in {1..3}; do
-> ./src/performance --data-dir=10000-users --lookups 10000 users _id 0
+> minizen --data-dir=10000-users performance --lookups 10000 users _id 0
 > done
 10000 lookups in 32704.016 ms (average = 3.270 ms); first query = 100.256 ms
 10000 lookups in 30680.144 ms (average = 3.068 ms); first query = 98.042 ms

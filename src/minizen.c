@@ -65,7 +65,9 @@ int main(int argc, char **argv) {
 	argc -= optind, argv += optind;
 
 	int rc;
-	if (strcmp(command, "search") == 0) {
+	if (strcmp(command, "performance") == 0) {
+		rc = minizen_performance(db, argc, argv);
+	} else if (strcmp(command, "search") == 0) {
 		rc = minizen_search(db, argc, argv);
 	} else {
 		fprintf(stderr, "minizen: '%s' is not a valid command\n",
