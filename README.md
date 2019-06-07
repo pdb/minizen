@@ -6,9 +6,9 @@ This is **minizen**, a very simple ticket searching system.
 
 Once built and installed (see [Docker Quick Start](#docker-quick-start) or
 [Manual Installation](#manual-installation) below) a search can be performed by
-calling minizen with three arguments:
+calling minizen with the following arguments:
 
-<pre><code>$ minizen <i>TABLE KEY VALUE</i>
+<pre><code>$ minizen search <i>TABLE KEY VALUE</i>
 </code></pre>
 
 where:
@@ -19,24 +19,25 @@ where:
 For example:
 
 ```
-$ minizen organizations _id 1
-$ minizen tickets priority high
-$ minizen users active true
+$ minizen search organizations _id 1
+$ minizen search tickets priority high
+$ minizen search users active true
 ```
 
 Note that shell quoting or escaping may be necessary if any of the arguments
 contain whitespace or any other special characters:
 
 ```
-$ minizen tickets subject \$100
-$ minizen users name "Bob Smith"
-$ minizen users email ""
+$ minizen search tickets subject \$100
+$ minizen search users name "Bob Smith"
+$ minizen search users email ""
 ```
 
 The minizen tool will look for JSON files in the current working directory
-unless a different directory is specified using the `--data-dir` option; e.g.:
+unless a different directory is specified using the `--data-dir` option
+_before_ the `search` command; e.g.:
 
-<pre><code>$ minizen <b>--data-dir=<i>DIR</i></b> <i>TABLE KEY VALUE</i>
+<pre><code>$ minizen <b>--data-dir=<i>DIR</i></b> search <i>TABLE KEY VALUE</i>
 </code></pre>
 
 # Docker Quick Start
@@ -55,14 +56,14 @@ Any additional arguments passed to `docker run minizen` will be passed through
 to the minizen tool (see [Usage](#usage) for more information) making the
 typical invocation:
 
-<pre><code>$ docker run minizen <i>TABLE KEY VALUE</i>
+<pre><code>$ docker run minizen search <i>TABLE KEY VALUE</i>
 </code></pre>
 
 Reference JSON files are preinstalled to `/var/db/minizen`, the container's
 working directory, and so are queried by default. Alternate sets of JSON files
 may be queried by mounting a local directory on `/var/db/minizen`; i.e.,
 
-<pre><code>$ docker run <b>-v <i>DIR</i>:/var/db/minizen</b> minizen <i>TABLE KEY VALUE</i>
+<pre><code>$ docker run <b>-v <i>DIR</i>:/var/db/minizen</b> minizen search <i>TABLE KEY VALUE</i>
 </code></pre>
 
 # Manual Installation
@@ -196,23 +197,6 @@ Having a separate library also lets us easily re-use this code in other tools
 (e.g., GUI applications, web applications, etc) while supporting independent
 development of the library and those tools. The API could also be easily
 extended in the future.
-
-The minizen tool itself could also easily be extended to support a subcommand
-style invocation:
-
-<pre><code>$ minizen <b>subcommand</b> ...
-</code></pre>
-
-For example:
-
-<pre><code>$ minizen <b>search</b> <i>TABLE KEY VALUE</i>
-$ minizen <b>schema</b> <i>TABLE</i>
-</code></pre>
-
-Consideration for this kind of extensibility is the reason the search code is
-in it's own `minizen-search.c` file (though we should also implement a few
-other minor changes, such as passing `argc` and `argv` directly to the
-subcommand's implementing function).
 
 ### Simplicity
 

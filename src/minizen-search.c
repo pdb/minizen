@@ -159,8 +159,14 @@ static int print_ticket(struct minizen_db *db, json_object *json, int i) {
 }
 
 
-int minizen_search(struct minizen_db *db, const char *table, const char *key,
-	const char *value) {
+int minizen_search(struct minizen_db *db, int argc, char **argv) {
+
+	if (argc != 4) {
+		usage("search TABLE KEY VALUE");
+		return EXIT_FAILURE;
+	}
+
+	const char *table = argv[1], *key = argv[2], *value = argv[3];
 
 	json_object *results = minizen_db_search(db, table, key, value);
 	if (! results) {
